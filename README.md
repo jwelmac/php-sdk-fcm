@@ -10,7 +10,8 @@ Set the title, message, and recipient as shown below
 | `+` message   | withMessage|  string   |                           |
 | `~` recipient |  to        |  string   | user device token         |
 | `~` recipient |  topic     |  string   | messge topic (user group) |
-|  data      |  withData* |  array    | Data to attach to message |
+|  data      |  withData* |  array    | Data to attach to message |  
+
 `+` Required  
 `~` Only one needed  
 `*` All other method calls starting with 'with' will be added to the data i.e. `withFoo('bar')` sets `data['foo'] = 'bar'`
@@ -36,6 +37,7 @@ $push->to('adsfasdf:adsfadsfadf')
 2. Set the data field explicitly
 
 ```php
+$push = new PushNotification();
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
@@ -46,6 +48,7 @@ $push->to('adsfasdf:adsfadsfadf')
 3. Without data
 
 ```php
+$push = new PushNotification();
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
