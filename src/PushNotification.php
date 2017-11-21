@@ -30,17 +30,17 @@ class PushNotification
         // OR not expected to have a prefix
         if(strpos($method, $this->methodPrefix) === 0) {
             $varname = strtolower(substr($method, 4));
-
-            // Set property directly if exists
-            // or add it to the data
-            $value = $args[0];
-            property_exists($this, $varname)
-                ? $this->$varname = $value
-                : $this->data[$varname] = $value;
         }
         else if(in_array($method, $this->recipients)) {
             $varname = $method;
         }
+
+        // Set property directly if exists
+        // or add it to the data
+        $value = $args[0];
+        property_exists($this, $varname)
+            ? $this->$varname = $value
+            : $this->data[$varname] = $value;
 
         //Return object for method chaining
         return $this;
@@ -82,10 +82,15 @@ class PushNotification
                     "title" => $this->title,
                     "sound" => "default",
                     "click_action" => "FCM_PLUGIN_ACTIVITY",
-                    "icon" => "fcm_push_icon",
-                    "data" => $this->data
+                    "icon" => "fcm_push_icon"
             )
         );
+
+        // Add data if present
+        if (count($this->data) != 0) {
+            $fields['notification']['data'] = $this->data;
+        }
+
         // Get the first set recipient 
         // Note: to will take precedence over topic if both set
         foreach ($this->recipients as $value) {
@@ -95,8 +100,6 @@ class PushNotification
             }
         }
         $fields = json_encode ( $fields );
-        var_dump($fields);
-        exit;
         return $fields;
     }
 

@@ -9,7 +9,7 @@ Set the title, message, and recipient as shown below
 | `+` title     | withTitle  |  string   |                           |
 | `+` message   | withMessage|  string   |                           |
 | `~` recipient |  to        |  string   | user device token         |
-| `~` recipient |  topic     |  string   | messge topic (user group) |
+| `~` recipient |  topic     |  string   | message topic (user group) |
 |  data      |  withData* |  array    | Data to attach to message |  
 
 `+` Required  
@@ -53,4 +53,22 @@ $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
      ->send();
+```
+
+`1` and `2` above will yield the following body being sent to the FCM server. For `3` no data will be present.
+
+```json
+{
+    "notification": {
+        "body":"there",
+        "title":"hello",
+        "sound":"default",
+        "click_action":"FCM_PLUGIN_ACTIVITY",
+        "icon":"fcm_push_icon",
+        "data":{
+            "link":"/msgevents"
+        }
+    },
+    "to":"adsfasdf:adsfadsfadfadsasd"
+}"
 ```
