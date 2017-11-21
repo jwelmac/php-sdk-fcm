@@ -19,7 +19,7 @@ Set the title, message, and recipient as shown below
 
 ## Setup
 1. Copy `src/config.ini.sample` to `src/config.ini`
-2. Set your API Key.  
+2. Set your API (Server) Key.  
 Found under the `Cloud messaging` tab in your Firebase dashboard settings.
 
 ## Usage
