@@ -1,3 +1,4 @@
 .vscode
 vendor/
 src/config.ini
+demo.php

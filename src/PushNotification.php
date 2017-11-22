@@ -82,7 +82,8 @@ class PushNotification
                     "title" => $this->title,
                     "sound" => "default",
                     "click_action" => "FCM_PLUGIN_ACTIVITY",
-                    "icon" => "fcm_push_icon"
+                    "icon" => "fcm_push_icon",
+                    "priority" => "high"
             )
         );
 
@@ -95,7 +96,7 @@ class PushNotification
         // Note: to will take precedence over topic if both set
         foreach ($this->recipients as $value) {
             if (!is_null($this->{$value})) {
-                $fields[$value] = $this->{$value};
+                $fields['to'] = ($value === 'topic' ? '/topics/' : '') . $this->{$value};
                 break;
             }
         }
