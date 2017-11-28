@@ -16,14 +16,27 @@ Set the title, message, and recipient as shown below
 `~` Only one needed  
 `*` All other method calls starting with 'with' will be added to the data i.e. `withFoo('bar')` sets `data['foo'] = 'bar'`
 
+### `save()`
+
+    Saves the current push notification request in the queue.
+
+### `send()`
+
+- Sends all requests in the queue to the Firebase server
+
+- Returns an array mapping each token to the a boolean indicating whether the push was successful.
+
 
 ## Setup
+
 1. Copy `src/config.ini.sample` to `src/config.ini`
 2. Set your API (Server) Key.  
+
 Found under the `Cloud messaging` tab in your Firebase dashboard settings.
 
 ## Usage
-1. Set the data field implicitly
+
+### Setting the data field implicitly
 
 ```php
 $push = new PushNotification();
@@ -31,10 +44,11 @@ $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
      ->withLink('/msgevents')
+     ->save()
      ->send();
 ```
 
-2. Set the data field explicitly
+### Setting the data field explicitly
 
 ```php
 $push = new PushNotification();
@@ -42,20 +56,11 @@ $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
      ->withData(['link' => '/msgevents'])
+     ->save()
      ->send();
 ```
 
-3. Without data
-
-```php
-$push = new PushNotification();
-$push->to('adsfasdf:adsfadsfadf')
-     ->withTitle('hello')
-     ->withMessage('there')
-     ->send();
-```
-
-`1` and `2` above will yield the following body being sent to the FCM server. For `3` no data will be present.
+ - Both requests above will yield the following body being sent to the FCM server.
 
 ```json
 {
@@ -64,11 +69,67 @@ $push->to('adsfasdf:adsfadsfadf')
         "title":"hello",
         "sound":"default",
         "click_action":"FCM_PLUGIN_ACTIVITY",
-        "icon":"fcm_push_icon",
-        "data":{
-            "link":"/msgevents"
-        }
+        "icon":"fcm_push_icon"
+    },
+    "data":{
+        "body":"there",
+        "title":"hello",
+        "link":"/msgevents"
     },
     "to":"adsfasdf:adsfadsfadfadsasd"
 }"
+```
+
+### Without data
+
+```php
+$push = new PushNotification();
+$push->to('adsfasdf:adsfadsfadf')
+     ->withTitle('hello')
+     ->withMessage('there')
+     ->save()
+     ->send();
+```
+
+### Sending to multiple recipients
+
+```php
+
+$messages = [
+    [
+        "token" => 'abc:1234',
+        "title" => "Hello",
+        "body" => "there",
+        "link" => "/msgevents"
+    ],
+    [
+        "token" => 'def:5678',
+        "title" => "World",
+        "body" => "where",
+        "link" => "/messages"
+    ],
+];
+// Create new notification object
+$push = new PushNotification();
+
+// Add all messages to queue
+foreach ($messages as $message) {
+    extract($message);
+    $push->to($token)
+         ->withTitle($title)
+         ->withMessage($body)
+         ->withLink($link)
+         ->save();
+}
+
+// Send off queue
+$result = $push->send();
+
+// var_dump($result);
+// array(2) {
+//   ["abc:1234"]=>
+//   bool(true)
+//   ["def:5678"]=>
+//   bool(true)
+// }
 ```

@@ -11,6 +11,7 @@ class PushNotification
     private $topic;
     private $methodPrefix = 'with';
     private $recipients = ['to', 'topic'];
+    private $queue = [];
 
     /**
      * Create a new push notification object and 
@@ -47,28 +48,42 @@ class PushNotification
     }
 
     /**
+     * Save a push entry to the queue for processing when send method called
+     */
+    public function save()
+    {
+        $this->queue[] = $this->prepareBody();
+    }
+
+    /**
      * Send notification to device with token or topic
      * Note: token takes precedence over device
      * Adapted from: http://bit.ly/2jadby4
      */
     public function send() 
     {
-        $fields = $this->prepareBody();
-        $headers = array (
-            'Authorization: key=' . $this->apiKey,
-            'Content-Type: application/json'
-        );
+        $results = [];
         
-        $ch = curl_init ();
-        curl_setopt ( $ch, CURLOPT_URL, $this->url );
-        curl_setopt ( $ch, CURLOPT_POST, true );
-        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
-        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $fields );
-        
-        $result = curl_exec ( $ch );
-        curl_close ( $ch );
-        var_dump($result);
+        foreach ($this->queue as $fields) {
+            $headers = array (
+                'Authorization: key=' . $this->apiKey,
+                'Content-Type: application/json'
+            );
+            
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $this->url );
+            curl_setopt ( $ch, CURLOPT_POST, true );
+            curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($fields) );
+            
+            $response = json_decode(curl_exec ( $ch ));
+
+            curl_close ( $ch );
+            $results[$fields['to']] = $response->success == 1;
+        }
+
+        return $results;
     }
 
     /**
@@ -105,7 +120,6 @@ class PushNotification
                 break;
             }
         }
-        $fields = json_encode ( $fields );
         return $fields;
     }
 
