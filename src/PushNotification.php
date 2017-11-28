@@ -76,10 +76,13 @@ class PushNotification
      * @return json Notification fields
      */
     private function prepareBody() {
+        $display = [
+            "body" => $this->message,
+            "title" => $this->title
+        ];
+
         $fields = array (
             'notification' => array (
-                    "body" => $this->message,
-                    "title" => $this->title,
                     "sound" => "default",
                     "click_action" => "FCM_PLUGIN_ACTIVITY",
                     "icon" => "fcm_push_icon",
@@ -91,6 +94,13 @@ class PushNotification
         if (count($this->data) != 0) {
             $fields['data'] = $this->data;
         }
+
+        // set the title and message for display in background and foreground
+        $keys = ['data', 'notification'];
+        foreach ($keys as $key) {
+            $fields[$key] = array_merge($fields[$key], $display);
+        }
+
 
         // Get the first set recipient 
         // Note: to will take precedence over topic if both set
