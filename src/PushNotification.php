@@ -89,7 +89,7 @@ class PushNotification
 
         // Add data if present
         if (count($this->data) != 0) {
-            $fields['notification']['data'] = $this->data;
+            $fields['data'] = $this->data;
         }
 
         // Get the first set recipient 
