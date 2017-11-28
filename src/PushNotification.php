@@ -55,8 +55,8 @@ class PushNotification
     {
         $fields = $this->prepareBody();
         $headers = array (
-                'Authorization: key=' . $this->apiKey,
-                'Content-Type: application/json'
+            'Authorization: key=' . $this->apiKey,
+            'Content-Type: application/json'
         );
         
         $ch = curl_init ();
@@ -83,24 +83,19 @@ class PushNotification
 
         $fields = array (
             'notification' => array (
-                    "sound" => "default",
-                    "click_action" => "FCM_PLUGIN_ACTIVITY",
-                    "icon" => "fcm_push_icon",
-                    "priority" => "high"
-            )
+                "sound" => "default",
+                "click_action" => "FCM_PLUGIN_ACTIVITY",
+                "icon" => "fcm_push_icon",
+                "priority" => "high"
+            ),
+            'data' => $this->data
         );
-
-        // Add data if present
-        if (count($this->data) != 0) {
-            $fields['data'] = $this->data;
-        }
 
         // set the title and message for display in background and foreground
         $keys = ['data', 'notification'];
         foreach ($keys as $key) {
             $fields[$key] = array_merge($fields[$key], $display);
         }
-
 
         // Get the first set recipient 
         // Note: to will take precedence over topic if both set
