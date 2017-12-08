@@ -10,7 +10,8 @@ Set the title, message, and recipient as shown below
 | `+` message   | withMessage|  string   |                           |
 | `~` recipient |  to        |  string   | user device token         |
 | `~` recipient |  topic     |  string   | message topic (user group) |
-|  data      |  withData* |  array    | Data to attach to message |  
+|  data      |  withData* |  array    | Data to attach to message |
+|  badge     |  withBadge |  number   | iOS - App icon badge      |
 
 `+` Required  
 `~` Only one needed  
@@ -18,7 +19,7 @@ Set the title, message, and recipient as shown below
 
 ### `save()`
 
-    Saves the current push notification request in the queue.
+- Saves the current push notification request in the queue.
 
 ### `send()`
 
@@ -44,6 +45,7 @@ $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
      ->withLink('/msgevents')
+     ->withBadge(1)
      ->save()
      ->send();
 ```
@@ -56,6 +58,7 @@ $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
      ->withData(['link' => '/msgevents'])
+     ->withBadge(1)
      ->save()
      ->send();
 ```
@@ -69,7 +72,8 @@ $push->to('adsfasdf:adsfadsfadf')
         "title":"hello",
         "sound":"default",
         "click_action":"FCM_PLUGIN_ACTIVITY",
-        "icon":"fcm_push_icon"
+        "icon":"fcm_push_icon",
+        "badge":1
     },
     "data":{
         "body":"there",
@@ -100,7 +104,8 @@ $messages = [
         "token" => 'abc:1234',
         "title" => "Hello",
         "body" => "there",
-        "link" => "/msgevents"
+        "link" => "/msgevents",
+        "badge" => 5
     ],
     [
         "token" => 'def:5678',

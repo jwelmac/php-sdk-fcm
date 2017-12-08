@@ -4,6 +4,7 @@ class PushNotification
 {
     private $apiKey;
     private $url = "https://fcm.googleapis.com/fcm/send";
+    private $badge;
     private $title;
     private $message;
     private $data = [];
@@ -105,6 +106,11 @@ class PushNotification
             ),
             'data' => $this->data
         );
+
+        // Add badge if set
+        if (isset($this->badge)) {
+            $fields['notification']['badge'] = $this->badge;
+        }
 
         // set the title and message for display in background and foreground
         $keys = ['data', 'notification'];
