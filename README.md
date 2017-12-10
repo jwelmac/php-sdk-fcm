@@ -3,6 +3,7 @@ Quickly and easily send a push notification using Firebase to a client using cor
 
 ## Methods
 Set the title, message, and recipient as shown below
+Optionally, set the badge number and associated data
 
 |Property    |Method      | Parameter | Note                      |
 |------------|------------|-----------|---------------------------|
@@ -10,8 +11,8 @@ Set the title, message, and recipient as shown below
 | `+` message   | withMessage|  string   |                           |
 | `~` recipient |  to        |  string   | user device token         |
 | `~` recipient |  topic     |  string   | message topic (user group) |
-|  data      |  withData* |  array    | Data to attach to message |
 |  badge     |  withBadge |  number   | iOS - App icon badge      |
+|  data      |  withData* |  array    | Data to attach to message |
 
 `+` Required  
 `~` Only one needed  
@@ -25,7 +26,7 @@ Set the title, message, and recipient as shown below
 
 - Sends all requests in the queue to the Firebase server
 
-- Returns an array mapping each token to the a boolean indicating whether the push was successful.
+- Returns an array mapping each token to a boolean indicating whether the push was successful.
 
 
 ## Setup
