@@ -2,7 +2,7 @@
 Quickly and easily send a push notification using Firebase to a client using cordova-plugin-fcm on a mobile device from your PHP backend.
 
 ## Methods
-Set the title, message, and recipient as shown below
+Set the title, message, and recipient as shown below  
 Optionally, set the badge number and associated data
 
 |Property    |Method      | Parameter | Note                      |
