@@ -2,7 +2,7 @@
 
 class PushNotification
 {
-    private $apiKey;
+    private $apiKey = null;
     private $url = "https://fcm.googleapis.com/fcm/send";
     private $badge;
     private $title;
@@ -15,13 +15,27 @@ class PushNotification
     private $queue = [];
 
     /**
-     * Create a new push notification object and 
-     * load configuration from file
+     * Create a new push notification object wih provided API Key
+     *
+     * @param string $apiKey
      */
-    public function __construct() 
+    public function __construct($apiKey = null)
     {
-        $ini_vars = parse_ini_file("config.ini");
-        $this->apiKey = $ini_vars['apiKey'];
+        if ($apiKey !== null) {
+            $this->setApiKey($apiKey);
+        }
+    }
+
+    /**
+     * set the api key
+     *
+     * @param string $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+
+        return $this;
     }
 
     /**
@@ -61,23 +75,28 @@ class PushNotification
      * Note: token takes precedence over device
      * Adapted from: http://bit.ly/2jadby4
      */
-    public function send() 
+    public function send()
     {
+        // Ensure API Key set before sending
+        if ($this->apiKey === null) {
+            throw new Exception("API Key Not Set", 1);
+        }
+
         $results = [];
-        
+
         foreach ($this->queue as $fields) {
             $headers = array (
                 'Authorization: key=' . $this->apiKey,
                 'Content-Type: application/json'
             );
-            
+
             $ch = curl_init ();
             curl_setopt ( $ch, CURLOPT_URL, $this->url );
             curl_setopt ( $ch, CURLOPT_POST, true );
             curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
             curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
             curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($fields) );
-            
+
             $response = json_decode(curl_exec ( $ch ));
 
             curl_close ( $ch );
@@ -118,7 +137,7 @@ class PushNotification
             $fields[$key] = array_merge($fields[$key], $display);
         }
 
-        // Get the first set recipient 
+        // Get the first set recipient
         // Note: to will take precedence over topic if both set
         foreach ($this->recipients as $value) {
             if (!is_null($this->{$value})) {
@@ -128,5 +147,4 @@ class PushNotification
         }
         return $fields;
     }
-
 }

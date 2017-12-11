@@ -1,8 +1,10 @@
 # PHP Firebase Cloud Messaging Helper
-Quickly and easily send a push notification using Firebase to a client using cordova-plugin-fcm on a mobile device from your PHP backend.
+
+Quickly and easily send a push notification using Firebase to a client using cordova-plugin-fcm from your PHP backend.
 
 ## Methods
-Set the title, message, and recipient as shown below  
+
+Set the title, message, and recipient as shown below
 Optionally, set the badge number and associated data
 
 |Property    |Method      | Parameter | Note                      |
@@ -14,8 +16,8 @@ Optionally, set the badge number and associated data
 |  badge     |  withBadge |  number   | iOS - App icon badge      |
 |  data      |  withData* |  array    | Data to attach to message |
 
-`+` Required  
-`~` Only one needed  
+`+` Required
+`~` Only one needed
 `*` All other method calls starting with 'with' will be added to the data i.e. `withFoo('bar')` sets `data['foo'] = 'bar'`
 
 ### `save()`
@@ -28,20 +30,16 @@ Optionally, set the badge number and associated data
 
 - Returns an array mapping each token to a boolean indicating whether the push was successful.
 
-
-## Setup
-
-1. Copy `src/config.ini.sample` to `src/config.ini`
-2. Set your API (Server) Key.  
-
-Found under the `Cloud messaging` tab in your Firebase dashboard settings.
-
 ## Usage
+
+To send the push notification you will need your API (Server) Key which can be found under the `Cloud messaging` tab in your Firebase dashboard settings.
+
+This can be set while constructing a new `PushNotification` object or by calling the method `setApiKey`.
 
 ### Setting the data field implicitly
 
 ```php
-$push = new PushNotification();
+$push = new PushNotification('_YOUR_API_KEY');
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
@@ -61,10 +59,11 @@ $push->to('adsfasdf:adsfadsfadf')
      ->withData(['link' => '/msgevents'])
      ->withBadge(1)
      ->save()
+     ->setApiKey('_YOUR_API_KEY')
      ->send();
 ```
 
- - Both requests above will yield the following body being sent to the FCM server.
+- Both requests above will yield the following body being sent to the FCM server.
 
 ```json
 {
@@ -88,7 +87,7 @@ $push->to('adsfasdf:adsfadsfadf')
 ### Without data
 
 ```php
-$push = new PushNotification();
+$push = new PushNotification('_YOUR_API_KEY');
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
@@ -99,7 +98,6 @@ $push->to('adsfasdf:adsfadsfadf')
 ### Sending to multiple recipients
 
 ```php
-
 $messages = [
     [
         "token" => 'abc:1234',
@@ -115,10 +113,11 @@ $messages = [
         "link" => "/messages"
     ],
 ];
-// Create new notification object
+
+// Create new push notification object
 $push = new PushNotification();
 
-// Add all messages to queue
+// Add all messages to the queue
 foreach ($messages as $message) {
     extract($message);
     $push->to($token)
@@ -127,6 +126,9 @@ foreach ($messages as $message) {
          ->withLink($link)
          ->save();
 }
+
+// Set the API Key
+$push->setApiKey('_YOUR_API_KEY');
 
 // Send off queue
 $result = $push->send();

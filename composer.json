@@ -1,6 +1,9 @@
 {
     "name": "jwelmac/php-sdk-fcm",
     "description": "PHP Firebase Cloud Messaging Helper for cordova-plugin-fcm",
+    "require": {
+        "php": ">=5.4"
+    },
     "require-dev": {
         "phpunit/phpunit": "^6.4"
     },
@@ -10,6 +13,5 @@
             "name": "Jermaine McFarlane",
             "email": "j.mcfarlane.mbbs@gmail.com"
         }
-    ],
-    "require": {}
+    ]
 }
