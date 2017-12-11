@@ -30,11 +30,17 @@ Optionally, set the badge number and associated data
 
 - Returns an array mapping each token to a boolean indicating whether the push was successful.
 
-## Usage
+## Setup
 
 To send the push notification you will need your API (Server) Key which can be found under the `Cloud messaging` tab in your Firebase dashboard settings.
 
-This can be set while constructing a new `PushNotification` object or by calling the method `setApiKey`.
+This can be set:
+
+- while constructing a new `PushNotification` object
+- by calling the method `setApiKey`
+- within `src/config.ini` (see `src/config.ini.sample`)
+
+## Usage
 
 ### Setting the data field implicitly
 
@@ -115,6 +121,7 @@ $messages = [
 ];
 
 // Create new push notification object
+// API Key to be read from config.ini
 $push = new PushNotification();
 
 // Add all messages to the queue
@@ -126,9 +133,6 @@ foreach ($messages as $message) {
          ->withLink($link)
          ->save();
 }
-
-// Set the API Key
-$push->setApiKey('_YOUR_API_KEY');
 
 // Send off queue
 $result = $push->send();

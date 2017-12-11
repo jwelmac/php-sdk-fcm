@@ -3,6 +3,7 @@
 class PushNotification
 {
     private $apiKey = null;
+    private $config_file_path = 'config.ini';
     private $url = "https://fcm.googleapis.com/fcm/send";
     private $badge;
     private $title;
@@ -15,7 +16,8 @@ class PushNotification
     private $queue = [];
 
     /**
-     * Create a new push notification object wih provided API Key
+     * Create a new push notification object wih API Key if provided
+     * or from config.ini file if found
      *
      * @param string $apiKey
      */
@@ -23,6 +25,9 @@ class PushNotification
     {
         if ($apiKey !== null) {
             $this->setApiKey($apiKey);
+        } else if(file_exists($config_file_path)) {
+            $ini_vars = parse_ini_file($config_file_path);
+            $this->apiKey = $ini_vars['apiKey'];
         }
     }
 
