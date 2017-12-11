@@ -2,7 +2,7 @@
 
 class PushNotification
 {
-    private $apiKey;
+    private $apiKey = null;
     private $url = "https://fcm.googleapis.com/fcm/send";
     private $badge;
     private $title;
@@ -15,8 +15,7 @@ class PushNotification
     private $queue = [];
 
     /**
-     * Create a new push notification object and
-     * load configuration from file
+     * Create a new push notification object wih provided API Key
      *
      * @param string $apiKey
      */
@@ -78,6 +77,11 @@ class PushNotification
      */
     public function send()
     {
+        // Ensure API Key set before sending
+        if ($this->apiKey === null) {
+            throw new Exception("API Key Not Set", 1);
+        }
+
         $results = [];
 
         foreach ($this->queue as $fields) {
