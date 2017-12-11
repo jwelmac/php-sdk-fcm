@@ -1,8 +1,10 @@
 # PHP Firebase Cloud Messaging Helper
+
 Quickly and easily send a push notification using Firebase to a client using cordova-plugin-fcm on a mobile device from your PHP backend.
 
 ## Methods
-Set the title, message, and recipient as shown below  
+
+Set the title, message, and recipient as shown below
 Optionally, set the badge number and associated data
 
 |Property    |Method      | Parameter | Note                      |
@@ -14,8 +16,8 @@ Optionally, set the badge number and associated data
 |  badge     |  withBadge |  number   | iOS - App icon badge      |
 |  data      |  withData* |  array    | Data to attach to message |
 
-`+` Required  
-`~` Only one needed  
+`+` Required
+`~` Only one needed
 `*` All other method calls starting with 'with' will be added to the data i.e. `withFoo('bar')` sets `data['foo'] = 'bar'`
 
 ### `save()`
@@ -32,7 +34,7 @@ Optionally, set the badge number and associated data
 ## Setup
 
 1. Copy `src/config.ini.sample` to `src/config.ini`
-2. Set your API (Server) Key.  
+2. Set your API (Server) Key.
 
 Found under the `Cloud messaging` tab in your Firebase dashboard settings.
 
@@ -41,7 +43,7 @@ Found under the `Cloud messaging` tab in your Firebase dashboard settings.
 ### Setting the data field implicitly
 
 ```php
-$push = new PushNotification();
+$push = new PushNotification('_YOUR_API_KEY');
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
@@ -54,7 +56,7 @@ $push->to('adsfasdf:adsfadsfadf')
 ### Setting the data field explicitly
 
 ```php
-$push = new PushNotification();
+$push = new PushNotification('_YOUR_API_KEY');
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
@@ -88,7 +90,7 @@ $push->to('adsfasdf:adsfadsfadf')
 ### Without data
 
 ```php
-$push = new PushNotification();
+$push = new PushNotification('_YOUR_API_KEY');
 $push->to('adsfasdf:adsfadsfadf')
      ->withTitle('hello')
      ->withMessage('there')
@@ -99,7 +101,6 @@ $push->to('adsfasdf:adsfadsfadf')
 ### Sending to multiple recipients
 
 ```php
-
 $messages = [
     [
         "token" => 'abc:1234',
@@ -115,8 +116,9 @@ $messages = [
         "link" => "/messages"
     ],
 ];
+
 // Create new notification object
-$push = new PushNotification();
+$push = new PushNotification('_YOUR_API_KEY');
 
 // Add all messages to queue
 foreach ($messages as $message) {
